@@ -14,16 +14,16 @@ func main() {
 	var r *chi.Mux = chi.NewRouter()
 	handlers.Handler(r)
 
-	fmt.Println("Starting GO API service ...")
-
-	fmt.Println(`
-   ______  ____        ___    ____  ____
+	fmt.Println(`   ______  ____        ___    ____  ____
   / ____/ / __ \      /   |  / __ \/  _/
  / / __  / / / /     / /| | / /_/ // /
 / /_/ / / /_/ /     / ___ |/ ____// /
-\____/  \____/     /_/  |_/_/   /___/
+\____/  \____/     /_/  |_/_/   /___/`)
 
-`)
+
+	fmt.Println("Starting GO API service ...")
+
+
 	err := http.ListenAndServe("localhost:8000", r)
 	if err != nil {
 		log.Error(err)
