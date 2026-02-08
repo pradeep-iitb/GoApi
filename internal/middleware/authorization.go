@@ -24,17 +24,16 @@ func Authorization(next http.Handler) http.Handler {
 	}
 
 	var database *tools.DatabaseInterface 
-	database , err = tools.NewDatabase()
+	database , err := tools.NewDatabase()
 	if err != nil {
-		api.InternalServerErrorHandler(w)
+		api.InternalServerErrorHandler(w,err)
 		return 
 	}
 
 	var loginDetails *tools.LoginDetails
-	loginDetails = (*database).GetLoginDetails(username)
+	loginDetails = (*database).GetUserLoginDetails(username)
 
 	if (loginDetails == nil || (token != (*loginDetails).AuthToken)) {
-		log.Error(UnAuthorizedError)
 		api.RequestErrorHandler(w, UnauthorizedError)
 		return
 	}

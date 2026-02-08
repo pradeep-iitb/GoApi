@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/schema"
 	"github.com/pradeep-iitb/GoApi/api"
 	"github.com/pradeep-iitb/GoApi/internal/tools"
-	"github.com/pradeep-iitb/GoApi/internal/middleware"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,14 +18,14 @@ func GetCoinBalance(w http.ResponseWriter, r *http.Request) {
 	err = decoder.Decode(&params, r.URL.Query())
 	if err != nil {
 		log.Error(err)
-		api.InternalErrorHandler(w, err)
+		api.InternalServerErrorHandler(w, err)
 		return
 	}
 
 	var database *tools.DatabaseInterface
 	database , err = tools.NewDatabase()
 	if err != nil {
-		api.InternalErrorHandler(w)
+		api.InternalServerErrorHandler(w, err)
 		return
 	}
 
@@ -35,12 +34,12 @@ func GetCoinBalance(w http.ResponseWriter, r *http.Request) {
 
 	if tokenDetails == nil {
 		log.Error(err)
-		api.InternalErrorHandler(w)
+		api.InternalServerErrorHandler(w, err)
 		return
 	}
 
 	var response = api.CoinBalanceResponse{
-		Balance: *(tokenDetails).Coins,
+		Balance: tokenDetails.Coins,
 		Code:   http.StatusOK,
 	}
 
@@ -48,7 +47,7 @@ func GetCoinBalance(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
 		log.Error(err)
-		api.InternalErrorHandler(w)
+		api.InternalServerErrorHandler(w, err)
 		return
 	}
 
